@@ -3,10 +3,19 @@ const express = require('express'),
   bodyParser = require('body-parser'),
   uuid = require('uuid');
 
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/flixDB', {useNewURLParser: true, useUnifiedTopology: true});
+
 const app = express();
 
 app.use(bodyParser.json());
 
+/* 
 let movies = [ 
   { id: 1,
     title: 'Star Wars: Episode I - The Phantom Menace',
@@ -72,8 +81,8 @@ let movies = [
     rating: 'PG',
     runtime: '121 min',
     genre: {
-      name: 'Science Fiction',
-      description: 'Numerous scenes, and/or the entire background for the setting of the narrative, should be based on speculative scientific discoveries or developments, environmental changes, space travel, or life on other planets. Subjective.'
+      name: 'Adventure',
+      description: 'Adventure film is a genre that revolves around the conquests and explorations of a protagonist. The purpose of the conquest can be to retrieve a person or treasure, but often the main focus is simply the pursuit of the unknown. These films generally take place in exotic locations and play on historical myths.'
     },
     stars: '8.6',
     description: 'Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire\'s world-destroying battle station, while also attempting to rescue Princess Leia from the mysterious Darth Vader.',
@@ -91,8 +100,8 @@ let movies = [
     rating: 'PG',
     runtime: '124 min',
     genre: {
-      name: 'Science Fiction',
-      description: 'Numerous scenes, and/or the entire background for the setting of the narrative, should be based on speculative scientific discoveries or developments, environmental changes, space travel, or life on other planets. Subjective.'
+      name: 'Adventure',
+      description: 'Adventure film is a genre that revolves around the conquests and explorations of a protagonist. The purpose of the conquest can be to retrieve a person or treasure, but often the main focus is simply the pursuit of the unknown. These films generally take place in exotic locations and play on historical myths.'
     },
     stars: '8.7',
     description: 'After the Rebels are overpowered by the Empire, Luke Skywalker begins Jedi training with Yoda, while his friends are pursued across the galaxy by Darth Vader and bounty hunter Boba Fett.',
@@ -110,8 +119,8 @@ let movies = [
     rating: 'PG',
     runtime: '131 min',
     genre: {
-      name: 'Science Fiction',
-      description: 'Numerous scenes, and/or the entire background for the setting of the narrative, should be based on speculative scientific discoveries or developments, environmental changes, space travel, or life on other planets. Subjective.'
+      name: 'Adventure',
+      description: 'Adventure film is a genre that revolves around the conquests and explorations of a protagonist. The purpose of the conquest can be to retrieve a person or treasure, but often the main focus is simply the pursuit of the unknown. These films generally take place in exotic locations and play on historical myths.'
     },
     stars: '8.3',
     description: 'After rescuing Han Solo from Jabba the Hutt, the Rebels attempt to destroy the second Death Star, while Luke struggles to help Darth Vader back from the dark side.',
@@ -129,8 +138,8 @@ let movies = [
     rating: 'PG-13',
     runtime: '138 min',
     genre: {
-      name: 'Science Fiction',
-      description: 'Numerous scenes, and/or the entire background for the setting of the narrative, should be based on speculative scientific discoveries or developments, environmental changes, space travel, or life on other planets. Subjective.'
+      name: 'Action',
+      description: 'Movies in the action genre are fast-paced and include a lot of action like fight scenes, chase scenes, and slow-motion shots. They can feature superheroes, martial arts, or exciting stunts. These high-octane films are more about the execution of the plot rather than the plot itself.'
     },
     stars: '7.8',
     description: 'As a new threat to the galaxy rises, Rey, a desert scavenger, and Finn, an ex-stormtrooper, must join Han Solo and Chewbacca to search for the one hope of restoring peace.',
@@ -148,8 +157,8 @@ let movies = [
     rating: 'PG-13',
     runtime: '152 min',
     genre: {
-      name: 'Science Fiction',
-      description: 'Numerous scenes, and/or the entire background for the setting of the narrative, should be based on speculative scientific discoveries or developments, environmental changes, space travel, or life on other planets. Subjective.'
+      name: 'Action',
+      description: 'Movies in the action genre are fast-paced and include a lot of action like fight scenes, chase scenes, and slow-motion shots. They can feature superheroes, martial arts, or exciting stunts. These high-octane films are more about the execution of the plot rather than the plot itself.'
     },
     stars: '6.9',
     description: 'The Star Wars saga continues as new heroes and galactic legends go on an epic adventure, unlocking mysteries of the Force and shocking revelations of the past.',
@@ -167,8 +176,8 @@ let movies = [
     rating: 'PG-13',
     runtime: '141 min',
     genre: {
-      name: 'Science Fiction',
-      description: 'Numerous scenes, and/or the entire background for the setting of the narrative, should be based on speculative scientific discoveries or developments, environmental changes, space travel, or life on other planets. Subjective.'
+      name: 'Action',
+      description: 'Movies in the action genre are fast-paced and include a lot of action like fight scenes, chase scenes, and slow-motion shots. They can feature superheroes, martial arts, or exciting stunts. These high-octane films are more about the execution of the plot rather than the plot itself.'
     },
     stars: '6.5',
     description: 'In the riveting conclusion of the landmark Skywalker saga, new legends will be born-and the final battle for freedom is yet to come.',
@@ -193,7 +202,7 @@ let movies = [
     description: 'In a time of conflict, a group of unlikely heroes band together on a mission to steal the plans to the Death Star, the Empire\'s ultimate weapon of destruction.',
     director: {
       name: 'Gareth Edwards',
-      bio: 'Gareth Edwards is a British filmmaker. He first gained widespread recognition for Monsters (2010), an independent film in which he served as writer, director, cinematographer, and visual effects artist.[1][2] He subsequently directed Godzilla (2014), a reboot[3] of Toho\'s Godzilla franchise and the first film in Legendary\'s MonsterVerse, and Rogue One: A Star Wars Story (2016), the first installment of the Star Wars anthology series and an immediate prequel to Star Wars: Episode IV – A New Hope (1977).',
+      bio: 'Gareth Edwards is a British filmmaker. He first gained widespread recognition for Monsters (2010), an independent film in which he served as writer, director, cinematographer, and visual effects artist.He subsequently directed Godzilla (2014), a reboot of Toho\'s Godzilla franchise and the first film in Legendary\'s MonsterVerse, and Rogue One: A Star Wars Story (2016), the first installment of the Star Wars anthology series and an immediate prequel to Star Wars: Episode IV – A New Hope (1977).',
       dob: 'June 1, 1975',
       birthplace: 'Nuneaton, Warwickshire, England, UK',
     },
@@ -264,59 +273,169 @@ let users = [
   },
 
 ]
-
+*/
 /*
 app.get('/movies', (req, res) => {
   res.json(movieList);
 });*/
-
+/*
 app.get('/', (req, res) => {
   res.send('Welcome to myFlix!');
 });
+*/
+
 
 //GET request to get a list of data on all movies
+// STILL NEED TO PASS TEST IN POSTMAN
 app.get('/movies', (req, res) => {
-  res.send('Successful GET request returning a list of all movies');
+  Movies.find()
+    .then((movies) => {
+      res.status(200).json(movies);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 //GET request to get data on a movie based on title
+// STILL NEED TO PASS TEST IN POSTMAN
 app.get('/movies/:title', (req, res) => {
-  res.send('Successful GET request returning data on the selected movie title');
+  Movies.findOne({title: req.params.title})
+    .then((movie) => {
+      res.json(movie);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 //GET request to get the genre of a movie based on title
-app.get('/movies/:genre/:description', (req, res) => {
-  res.send('Successful GET request returning description of genre of selected movie based on title');
+// STILL NEED TO PASS TEST IN POSTMAN - naming may be off
+app.get('/movies/genre/:genreName', (req, res) => {
+  Movies.findOne({ 'genre.name': req.params.genreName})
+    .then((movie) => {
+      res.json(movie.genre);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 //GET request to get data about the director of a selected movie title
-app.get('/movies/:director/:bio', (req, res) => {
-  res.send('Successful GET request returning information on the director of the selected movie based on title');
+// STILL NEED TO PASS TEST IN POSTMAN
+app.get('/movies/director/:directorName', (req, res) => {
+  Movies.findOne({ 'director.name': req.params.directorName })
+    .then((movie) => {
+      res.json(movie.director);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 //POST request to register new users 
+// STILL NEED TO PASS TEST IN POSTMAN
 app.post('/users', (req, res) => {
-  res.send('Successful new user registration');
+  Users.findOne({username: req.body.username})
+  .then((user) => {
+    if (user) {
+      return res.status(400).send(req.body.username + 'already exists');
+    } else {
+      Users
+        .create({
+          username: req.body.username,
+          password: req.body.password,
+          email: req.body.email,
+          birthday: req.body.birthday
+        })
+        .then((user) => {res.status(201).json(user)})
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+      })
+    }
+  })
+  .catch((error) => {
+    console.error(error);
+    res.status(500).send('Error: ' + error);
+  });
 });
 
 //PUT request to update username of an existing user
-app.put('/users', (req, res) => {
-  res.send('Successfully updated username');
+// STILL NEED TO PASS TEST IN POSTMAN
+app.put('/users/:username', (req, res) => {
+  Users.findOneAndUpdate({ username: req.params.username}, { $set:
+    {
+      username: req.body.username,
+      password: req.body.password,
+      email: req.body.email,
+      birthday: req.body.birthday
+    }
+  },
+  { new: true}, //ensures updated document is returned
+  (err, updatedUser) => {
+    if(err) {
+      console.error(err);
+      res.status(500).send('Error: '+ err);
+    } else {
+      res.json(updatedUser);
+    }
+  });
 });
 
 //POST request to add a movie to favorites list 
-app.post('/users/:favoriteMovies', (req, res) => {
-  res.send('Successfully added movie to favorites list');
+// STILL NEED TO PASS TEST IN POSTMAN
+app.post('/users/:username/movies/movieID', (req, res) => {
+  Users.findOneAndUpdate({ username: req.params.username}, {
+    $push: { favoriteMovies: req.params.MovieID}
+  },
+  { new: true},
+  (err, updatedUser) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    } else {
+      res.json(updatedUser);
+    }
+  });
 });
 
 //DELETE request to remove a movie from favorites list 
-app.delete('/users/:favoriteMovies', (req, res) => {
-  res.send('Successfully removed movie from favorites list');
+// STILL NEED TO PASS TEST IN POSTMAN
+app.delete('/users/:username/movies/movieID', (req, res) => {
+  Users.findOneAndUpdate({ username: req.params.username}, {
+    $pull: { favoriteMovies: req.params.MovieID }
+  },
+  { new: true},
+  (err, updatedUser) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    } else {
+      res.json(updatedUser);
+    }
+  });
 });
 
 //DELETE request to deregister a user's account
-app.delete('/users/username/:id', (req, res) => {
-  res.send('Successfully deleted user account');
+// STILL NEED TO PASS TEST IN POSTMAN
+app.delete('/users/:username', (req, res) => {
+  Users.findOneAndRemove({ username: req.params.username})
+    .then((user) => {
+      if (!user) {
+        res.status(400).send(req.params.username + ' was not found');
+      } else {
+        res.status(200).send(req.params.username + ' was deleted');
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
 // using express.static to serve doc file which is stored in public folder
