@@ -46,43 +46,55 @@
       </tr>
       <tr>
         <td>Return data about a genre (description) by name/title</td>
-        <td>/movies/:genre/:description</td>
+        <td>/movies/genre/:genreName</td>
         <td>GET</td>
         <td>a JSON object containing data about a genre</td>
       </tr>
       <tr>
         <td>Return data about a director (bio, birth year, death year) by name</td>
-        <td>/movies/:director/:bio</td>
+        <td>/movies/director/:directorName</td>
         <td>GET</td>
         <td>a JSON object containing data about a director</td>
+      </tr>
+      <tr>
+        <td>Find all users</td>
+        <td>/users</td>
+        <td>GET</td>
+        <td>a JSON object containing data about all users</td>
       </tr>
       <tr>
         <td>Allow new users to register</td>
         <td>/users</td>
         <td>POST</td>
-        <td>a text message stating that a new account has been registered</td>
+        <td>a JSON object containing data that was entered including Username, Password, Email, Birthday, and FavoriteMovies (optional)</td>
+      </tr>
+      <tr>
+        <td>Access user information by username</td>
+        <td>/users/:username</td>
+        <td>GET</td>
+        <td>a JSON object containing data on the username that was searched</td>
       </tr>
       <tr>
         <td>Allow users to update their user info (username)</td>
-        <td>/users</td>
+        <td>/users/:username</td>
         <td>PUT</td>
-        <td>a text message stating that user information has been updated</td>
+        <td>a JSON object containing updated user information for selecter user</td>
       </tr>
       <tr>
         <td>Allow users to add a movie to their list of favorites (showing only a text that a movie has been added)</td>
-        <td>/users/:favoriteMovies</td>
+        <td>/users/:username/movies/:movieID</td>
         <td>POST</td>
-        <td>a text message stating that a movie has been added to their favorites list</td>
+        <td>a JSON object that contains data on the user and the newly added favorite movie ID</td>
       </tr>
       <tr>
         <td>Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed)</td>
-        <td>/users/:favoriteMovies</td>
+        <td>/users/:username/movies/:movieID</td>
         <td>DELETE</td>
-        <td>a text message stating that a movie has been removed from their favorites list</td>
+        <td>a JSON object that contains data on the user without the movie ID that was removed </td>
       </tr>
       <tr>
         <td>Allow existing users to deregister (showing only a text that a user email has been removed)</td>
-        <td>/users/username/:id</td>
+        <td>/users/:username</td>
         <td>DELETE</td>
         <td>a text message stating that the account has successfully been deleted</td>
       </tr>

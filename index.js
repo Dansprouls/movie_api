@@ -274,19 +274,8 @@ let users = [
 
 ]
 */
-/*
-app.get('/movies', (req, res) => {
-  res.json(movieList);
-});*/
-/*
-app.get('/', (req, res) => {
-  res.send('Welcome to myFlix!');
-});
-*/
-
 
 //GET request to get a list of data on all movies
-// STILL NEED TO PASS TEST IN POSTMAN
 app.get('/movies', (req, res) => {
   Movies.find()
     .then((movies) => {
@@ -299,7 +288,6 @@ app.get('/movies', (req, res) => {
 });
 
 //GET request to get data on a movie based on title
-// STILL NEED TO PASS TEST IN POSTMAN
 app.get('/movies/:title', (req, res) => {
   Movies.findOne({title: req.params.title})
     .then((movie) => {
@@ -312,7 +300,6 @@ app.get('/movies/:title', (req, res) => {
 });
 
 //GET request to get the genre of a movie based on title
-// STILL NEED TO PASS TEST IN POSTMAN - naming may be off
 app.get('/movies/genre/:genreName', (req, res) => {
   Movies.findOne({ 'genre.name': req.params.genreName})
     .then((movie) => {
@@ -325,7 +312,6 @@ app.get('/movies/genre/:genreName', (req, res) => {
 });
 
 //GET request to get data about the director of a selected movie title
-// STILL NEED TO PASS TEST IN POSTMAN
 app.get('/movies/director/:directorName', (req, res) => {
   Movies.findOne({ 'director.name': req.params.directorName })
     .then((movie) => {
@@ -337,8 +323,18 @@ app.get('/movies/director/:directorName', (req, res) => {
     });
 });
 
+app.get('/users', (req, res) => {
+  Users.find()
+    .then((users) => {
+      res.status(201).json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: '+ err);
+    });
+});
+
 //POST request to register new users 
-// STILL NEED TO PASS TEST IN POSTMAN
 app.post('/users', (req, res) => {
   Users.findOne({username: req.body.username})
   .then((user) => {
@@ -365,64 +361,66 @@ app.post('/users', (req, res) => {
   });
 });
 
-//PUT request to update username of an existing user
-// STILL NEED TO PASS TEST IN POSTMAN
-app.put('/users/:username', (req, res) => {
-  Users.findOneAndUpdate({ username: req.params.username}, { $set:
-    {
-      username: req.body.username,
-      password: req.body.password,
-      email: req.body.email,
-      birthday: req.body.birthday
-    }
-  },
-  { new: true}, //ensures updated document is returned
-  (err, updatedUser) => {
-    if(err) {
+//GET request to get a user by username
+app.get('users/:username', (req, res) => {
+  Users.findOne({ username: req.params.username })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
       console.error(err);
-      res.status(500).send('Error: '+ err);
-    } else {
-      res.json(updatedUser);
-    }
-  });
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+//PUT request to update username of an existing user
+app.put('/users/:username', async (req, res) => {
+  try {
+    const updatedUser = await Users.findOneAndUpdate({ username: req.params.username}, { $set:
+      {
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+        birthday: req.body.birthday
+      }
+    },
+    { new: true}); //ensures updated document is returned
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error: '+ err);
+  }
 });
 
 //POST request to add a movie to favorites list 
-// STILL NEED TO PASS TEST IN POSTMAN
-app.post('/users/:username/movies/movieID', (req, res) => {
-  Users.findOneAndUpdate({ username: req.params.username}, {
-    $push: { favoriteMovies: req.params.MovieID}
-  },
-  { new: true},
-  (err, updatedUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
-    }
-  });
+app.post('/users/:username/movies/:movieID', async (req, res) => {
+  try {
+    const updatedUser = await Users.findOneAndUpdate({ username: req.params.username}, {
+      $push: { favoriteMovies: req.params.movieID}
+    },
+    { new: true});
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  }
 });
 
 //DELETE request to remove a movie from favorites list 
-// STILL NEED TO PASS TEST IN POSTMAN
-app.delete('/users/:username/movies/movieID', (req, res) => {
-  Users.findOneAndUpdate({ username: req.params.username}, {
-    $pull: { favoriteMovies: req.params.MovieID }
-  },
-  { new: true},
-  (err, updatedUser) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
-    }
-  });
+app.delete('/users/:username/movies/:movieID', async (req, res) => {
+  try {
+    const updatedUser = await Users.findOneAndUpdate({ username: req.params.username}, {
+      $pull: { favoriteMovies: req.params.movieID }
+    },
+    { new: true});
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  }
 });
 
 //DELETE request to deregister a user's account
-// STILL NEED TO PASS TEST IN POSTMAN
 app.delete('/users/:username', (req, res) => {
   Users.findOneAndRemove({ username: req.params.username})
     .then((user) => {
