@@ -1,4 +1,4 @@
-/*const passport = require('passport'),
+const passport = require('passport'),
   LocalStrategy = require('passport-local').Strategy,
   Models = require('./models.js'),
   passportJWT = require('passport-jwt');
@@ -8,11 +8,11 @@ let Users = Models.User,
   ExtractJWT = passportJWT.ExtractJwt;
 
 passport.use(new LocalStrategy({
-  usernameField: 'Username',
-  passwordField: 'Password'
+  usernameField: 'username',
+  passwordField: 'password'
 }, (username, password, callback) => {
-  console.log(username + ' ' + password);
-  Users.findOne({ Username: username}, (error, user) => {
+  console.log(username + '  ' + password);
+  Users.findOne({ username: username }, (error, user) => {
     if (error) {
       console.log(error);
       return callback(error);
@@ -40,7 +40,6 @@ passport.use(new JWTStrategy({
       return callback(error)
     });
 }));
-*/
 
 /* const passport = require('passport'),
   LocalStrategy = require('passport-local').Strategy,
@@ -85,7 +84,8 @@ passport.use(new JWTStrategy({
     });
 })); */
 
-
+//Gerrit's code
+/*
 const passport = require('passport'),
   LocalStrategy = require('passport-local').Strategy,
   Models = require('./models.js'),
@@ -99,7 +99,7 @@ passport.use(new LocalStrategy({
   usernameField: 'username',
   passwordField: 'password'
 }, (username, password, callback) => {
-  console.log(username + ' test  ' + password);
+  console.log(username + ' ' + password);
   Users.findOne({ username: username }).then(
     (user, error) => {
       console.log('ret: ', user, error)
@@ -121,4 +121,47 @@ passport.use(new JWTStrategy({
       return callback(error)
     });
 }));
+*/
 
+// ASYNC AWAIT GENERATOR
+/*
+const passport = require('passport'),
+  LocalStrategy = require('passport-local').Strategy,
+  Models = require('./models.js'),
+  passportJWT = require('passport-jwt');
+
+let Users = Models.User,
+  JWTStrategy = passportJWT.Strategy,
+  ExtractJWT = passportJWT.ExtractJwt;
+
+passport.use(new LocalStrategy({
+  usernameField: 'username',
+  passwordField: 'password'
+}, async (username, password) => {
+  console.log(username + '  ' + password);
+  try {
+    const user = await Users.findOne({ username: username });
+    if (!user) {
+      console.log('incorrect username');
+      throw new Error('Incorrect username or password.');
+    }
+    console.log('finished');
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}));
+
+passport.use(new JWTStrategy({
+  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  secretOrKey: 'your_jwt_secret'
+}, async (jwtPayload) => {
+  try {
+    const user = await Users.findById(jwtPayload._id);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}));
+*/

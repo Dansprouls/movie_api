@@ -20,6 +20,10 @@ let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 
+//const cors = require('cors');
+
+//allows requests from all origins
+//app.use(cors());
 
 /* 
 let movies = [ 
