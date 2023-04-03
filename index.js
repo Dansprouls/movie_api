@@ -5,6 +5,7 @@ const express = require('express'),
 
 const mongoose = require('mongoose');
 const Models = require('./models.js');
+const { check, validationResult } = require('express-validator');
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -20,10 +21,10 @@ let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 
-//const cors = require('cors');
+const cors = require('cors');
 
 //allows requests from all origins
-//app.use(cors());
+app.use(cors());
 
 /* 
 let movies = [ 
@@ -350,7 +351,23 @@ app.get('/users', passport.authenticate('jwt', { session: false }),
 });
 
 //POST request to register new users 
-app.post('/users', (req, res) => {
+app.post('/users', (req, res) => 
+
+  [
+    check('username', 'Username is required').isLength({min:5}),
+    check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('password', 'Password is required').not().isEmpty(),
+    check('Email','Email does not appear to be valid.').isEmail()
+  ], (req, res) => {
+
+    // check the validation object for errors
+    let errors = validationResult(req);
+
+    if(!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+  
+  let hashedPassword = Users.hashPassword(req.body.password);
   Users.findOne({username: req.body.username})
   .then((user) => {
     if (user) {
@@ -359,7 +376,7 @@ app.post('/users', (req, res) => {
       Users
         .create({
           username: req.body.username,
-          password: req.body.password,
+          password: hashedPassword,
           email: req.body.email,
           birthday: req.body.birthday
         })
@@ -466,8 +483,9 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong!');
 })
 
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0',() => {
+  console.log('Listening on Port ' + port);
 });
 
 
