@@ -351,7 +351,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }),
 });
 
 //POST request to register new users 
-app.post('/users', (req, res) => 
+app.post('/users',
 
   [
     check('username', 'Username is required').isLength({min:5}),
