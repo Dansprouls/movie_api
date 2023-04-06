@@ -4,7 +4,7 @@ const express = require('express'),
   uuid = require('uuid');
 
 const mongoose = require('mongoose');
-const Models = require('./models.js');
+const Models = require('../models.js');
 const { check, validationResult } = require('express-validator');
 
 const Movies = Models.Movie;
@@ -17,9 +17,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-let auth = require('./auth')(app);
+let auth = require('../auth')(app);
 const passport = require('passport');
-require('./passport');
+require('../passport');
 
 const cors = require('cors');
 
@@ -487,6 +487,8 @@ const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0',() => {
   console.log('Listening on Port ' + port);
 });
+
+module.exports = app;
 
 
 
