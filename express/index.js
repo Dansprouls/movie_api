@@ -10,9 +10,12 @@ const { check, validationResult } = require('express-validator');
 const Movies = Models.Movie;
 const Users = Models.User;
 
+const serverless = require('serverless-http')
+
 mongoose.connect('mongodb://localhost:27017/flixDB', {useNewURLParser: true, useUnifiedTopology: true});
 
 const app = express();
+const router = express.Router;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -286,8 +289,14 @@ let users = [
 ]
 */
 
+router.get('/', (req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.write('<h1>Hello from Express.js!</h1>');
+  res.end();
+});
+
 //GET request to get a list of data on all movies
-app.get('/movies', passport.authenticate('jwt', { session: false }), 
+router.get('/movies', passport.authenticate('jwt', { session: false }), 
 (req, res) => {
   Movies.find()
     .then((movies) => {
@@ -300,7 +309,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }),
 });
 
 //GET request to get data on a movie based on title
-app.get('/movies/:title', passport.authenticate('jwt', { session: false }), 
+/*app.get('/movies/:title', passport.authenticate('jwt', { session: false }), 
 (req, res) => {
   Movies.findOne({title: req.params.title})
     .then((movie) => {
@@ -483,12 +492,17 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong!');
 })
 
-const port = process.env.PORT || 8080;
+/*const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0',() => {
   console.log('Listening on Port ' + port);
-});
+});*/
+
+app.use('/.netlify/functions/server', router);  // path must route to lambda
+app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 
 module.exports = app;
+
+
 
 
 
