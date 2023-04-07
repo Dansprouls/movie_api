@@ -308,8 +308,9 @@ router.get('/movies', passport.authenticate('jwt', { session: false }),
     });
 });
 
+/*
 //GET request to get data on a movie based on title
-/*app.get('/movies/:title', passport.authenticate('jwt', { session: false }), 
+app.get('/movies/:title', passport.authenticate('jwt', { session: false }), 
 (req, res) => {
   Movies.findOne({title: req.params.title})
     .then((movie) => {
@@ -481,6 +482,8 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
       res.status(500).send('Error: ' + err);
     });
 });
+
+*/
 
 // using express.static to serve doc file which is stored in public folder
 app.use(express.static('public'));
