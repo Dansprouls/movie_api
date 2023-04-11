@@ -289,6 +289,10 @@ let users = [
 ]
 */
 
+app.get('/', (req, res) => {
+  res.sendFile('public/documentation.html', { root: __dirname });
+});
+
 //GET request to get a list of data on all movies
 app.get('/movies', passport.authenticate('jwt', { session: false }), 
 (req, res) => {
