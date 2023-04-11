@@ -3,7 +3,7 @@ const express = require('express'),
   bodyParser = require('body-parser'),
   uuid = require('uuid'),
   mongoose = require('mongoose'),
-  Models = require('../models.js');
+  Models = require('./models.js');
 
 const { check, validationResult } = require('express-validator');
 
