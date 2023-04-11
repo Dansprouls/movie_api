@@ -1,32 +1,23 @@
 const express = require('express'),
   morgan = require('morgan'),
   bodyParser = require('body-parser'),
-  uuid = require('uuid');
+  uuid = require('uuid'),
+  mongoose = require('mongoose'),
+  Models = require('../models.js');
 
-const mongoose = require('mongoose');
-const Models = require('../models.js');
 const { check, validationResult } = require('express-validator');
 
+//imports schema models
 const Movies = Models.Movie;
 const Users = Models.User;
-
-const serverless = require('serverless-http')
 
 mongoose.connect('mongodb://localhost:27017/flixDB', {useNewURLParser: true, useUnifiedTopology: true});
 
 const app = express();
-const router = express.Router;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-<<<<<<< HEAD:express/index.js
-let auth = require('../auth')(app);
-const passport = require('passport');
-require('../passport');
-
-=======
->>>>>>> Task-2.10:index.js
 const cors = require('cors');
 
 //allows requests from all origins
@@ -296,14 +287,8 @@ let users = [
 ]
 */
 
-router.get('/', (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.write('<h1>Hello from Express.js!</h1>');
-  res.end();
-});
-
 //GET request to get a list of data on all movies
-router.get('/movies', passport.authenticate('jwt', { session: false }), 
+app.get('/movies', passport.authenticate('jwt', { session: false }), 
 (req, res) => {
   Movies.find()
     .then((movies) => {
@@ -315,7 +300,7 @@ router.get('/movies', passport.authenticate('jwt', { session: false }),
     });
 });
 
-/*
+
 //GET request to get data on a movie based on title
 app.get('/movies/:title', passport.authenticate('jwt', { session: false }), 
 (req, res) => {
@@ -490,8 +475,6 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
     });
 });
 
-*/
-
 // using express.static to serve doc file which is stored in public folder
 app.use(express.static('public'));
 
@@ -502,17 +485,11 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong!');
 })
 
-/*const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0',() => {
   console.log('Listening on Port ' + port);
-});*/
+});
 
-app.use('/.netlify/functions/server', router);  // path must route to lambda
-app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
-
-module.exports = app;
-
-module.exports.handler = serverless(app);
 
 
 
