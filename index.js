@@ -17,14 +17,14 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-let auth = require('./auth')(app);
-const passport = require('passport');
-require('./passport');
-
 const cors = require('cors');
 
 //allows requests from all origins
 app.use(cors());
+
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
 
 /* 
 let movies = [ 
@@ -351,7 +351,7 @@ app.get('/users', passport.authenticate('jwt', { session: false }),
 });
 
 //POST request to register new users 
-app.post('/users', (req, res) => 
+app.post('/users',
 
   [
     check('username', 'Username is required').isLength({min:5}),
